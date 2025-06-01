@@ -1030,7 +1030,7 @@ int idevicerestore_start(struct idevicerestore_client_t* client)
 		build_identity = build_manifest_get_build_identity_for_model_with_variant(client->build_manifest, client->device->hardware_model, RESTORE_VARIANT_UPGRADE_INSTALL, 0);
 		if (!build_identity) {
 			build_identity = build_manifest_get_build_identity_for_model(client->build_manifest, client->device->hardware_model);
-		}
+        }
 	}
 	if (build_identity == NULL) {
 		error("ERROR: Unable to find a matching build identity\n");
@@ -1187,6 +1187,11 @@ int idevicerestore_start(struct idevicerestore_client_t* client)
 	}
 
 	idevicerestore_progress(client, RESTORE_STEP_PREPARE, 0.2);
+	if (client->mode == MODE_RESTORE) {
+	    if (client->flags & FLAG_ALLOW_RESTORE_MODE) {
+			tss_enabled = 0;
+		}
+	}
 
 	/* retrieve shsh blobs if required */
 	if (tss_enabled) {

@@ -301,6 +301,15 @@ irecv_device_t restore_get_irecv_device(struct idevicerestore_client_t* client)
 	}
 
 	plist_get_string_val(node, &model);
+	fprintf(stderr, "%s: Found model %s\n", __func__, model);
+
+	/* HACK: replace DEV devices with AP equivalent
+	* so it enjoy fdr-less restore
+	*/
+	if (strstr(model, "DEV")) {
+		strncpy(strstr(model, "DEV"), "AP\0", 3);
+	}
+
 	irecv_devices_get_device_by_hardware_model(model, &irecv_device);
 	free(model);
 
